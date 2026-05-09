@@ -2,9 +2,11 @@
 
 import { useResume } from "@/context/ResumeContext";
 
+const inputClass = "w-full px-3 py-2 bg-gray-50/80 border border-gray-200 rounded-lg text-sm text-gray-800 placeholder:text-gray-400 focus:bg-white focus:border-gray-300 focus:ring-2 focus:ring-gray-900/5 outline-none transition-all";
+const labelClass = "block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5";
+
 function calculateDuration(start: string, end: string): string {
   if (!start || !end) return "";
-  if (!start) return "";
   const parseDate = (s: string): Date | null => {
     const months: Record<string, number> = {
       jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
@@ -37,21 +39,21 @@ export default function ExperienceForm() {
   const { resumeData, dispatch } = useResume();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {resumeData.experience.map((exp, index) => (
         <div
           key={exp.id}
-          className="relative border border-gray-200 rounded-lg p-4 space-y-3"
+          className="relative border border-gray-100 rounded-xl p-4 space-y-3 bg-gray-50/30"
         >
-          <div className="absolute top-2 right-2 flex items-center gap-0.5">
+          <div className="absolute top-3 right-3 flex items-center gap-0.5">
             <button
               type="button"
               onClick={() => dispatch({ type: "MOVE_EXPERIENCE", id: exp.id, direction: "up" })}
               disabled={index === 0}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="p-1 text-gray-300 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               title="Move up"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
               </svg>
             </button>
@@ -59,143 +61,112 @@ export default function ExperienceForm() {
               type="button"
               onClick={() => dispatch({ type: "MOVE_EXPERIENCE", id: exp.id, direction: "down" })}
               disabled={index === resumeData.experience.length - 1}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="p-1 text-gray-300 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               title="Move down"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
             <button
               type="button"
               onClick={() => dispatch({ type: "REMOVE_EXPERIENCE", id: exp.id })}
-              className="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+              className="p-1 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
               title="Remove experience"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Job Title
-            </label>
+            <label className={labelClass}>Job Title</label>
             <input
               type="text"
               value={exp.title}
               onChange={(e) =>
-                dispatch({
-                  type: "UPDATE_EXPERIENCE",
-                  id: exp.id,
-                  field: "title",
-                  value: e.target.value,
-                })
+                dispatch({ type: "UPDATE_EXPERIENCE", id: exp.id, field: "title", value: e.target.value })
               }
               placeholder="Software Engineer"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className={inputClass}
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Company
-            </label>
-            <input
-              type="text"
-              value={exp.company}
-              onChange={(e) =>
-                dispatch({
-                  type: "UPDATE_EXPERIENCE",
-                  id: exp.id,
-                  field: "company",
-                  value: e.target.value,
-                })
-              }
-              placeholder="Company Name"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelClass}>Company</label>
+              <input
+                type="text"
+                value={exp.company}
+                onChange={(e) =>
+                  dispatch({ type: "UPDATE_EXPERIENCE", id: exp.id, field: "company", value: e.target.value })
+                }
+                placeholder="Company Name"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Location</label>
+              <input
+                type="text"
+                value={exp.location}
+                onChange={(e) =>
+                  dispatch({ type: "UPDATE_EXPERIENCE", id: exp.id, field: "location", value: e.target.value })
+                }
+                placeholder="San Francisco, CA"
+                className={inputClass}
+              />
+            </div>
           </div>
 
           <div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Start Date
-                </label>
+                <label className={labelClass}>Start Date</label>
                 <input
                   type="text"
                   value={exp.startDate}
                   onChange={(e) =>
-                    dispatch({
-                      type: "UPDATE_EXPERIENCE",
-                      id: exp.id,
-                      field: "startDate",
-                      value: e.target.value,
-                    })
+                    dispatch({ type: "UPDATE_EXPERIENCE", id: exp.id, field: "startDate", value: e.target.value })
                   }
                   placeholder="Feb 2025"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className={inputClass}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  End Date
-                </label>
+                <label className={labelClass}>End Date</label>
                 <input
                   type="text"
                   value={exp.endDate}
                   onChange={(e) =>
-                    dispatch({
-                      type: "UPDATE_EXPERIENCE",
-                      id: exp.id,
-                      field: "endDate",
-                      value: e.target.value,
-                    })
+                    dispatch({ type: "UPDATE_EXPERIENCE", id: exp.id, field: "endDate", value: e.target.value })
                   }
                   placeholder="Aug 2025 or Present"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className={inputClass}
                 />
               </div>
             </div>
             {(() => {
               const duration = calculateDuration(exp.startDate, exp.endDate);
-              return duration && <span className="text-xs text-gray-500">{duration}</span>;
+              return duration && (
+                <span className="inline-flex items-center gap-1 mt-1 text-[11px] text-gray-400">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  {duration}
+                </span>
+              );
             })()}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Location
-            </label>
-            <input
-              type="text"
-              value={exp.location}
-              onChange={(e) =>
-                dispatch({
-                  type: "UPDATE_EXPERIENCE",
-                  id: exp.id,
-                  field: "location",
-                  value: e.target.value,
-                })
-              }
-              placeholder="San Francisco, CA"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            />
-          </div>
-
-          {/* Bullet Points */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Bullet Points
-            </label>
-            <div className="space-y-2">
+            <label className={labelClass}>Bullet Points</label>
+            <div className="space-y-1.5">
               {exp.bullets.map((bullet, bulletIndex) => (
-                <div key={bulletIndex} className="flex items-start gap-2">
-                  <span className="mt-2.5 text-gray-400 text-sm select-none">
-                    &bull;
-                  </span>
+                <div key={bulletIndex} className="flex items-center gap-2">
+                  <span className="text-gray-300 text-xs select-none w-4 text-center shrink-0">&bull;</span>
                   <input
                     type="text"
                     value={bullet}
@@ -208,32 +179,18 @@ export default function ExperienceForm() {
                       })
                     }
                     placeholder="Describe your achievement or responsibility..."
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className={"flex-1 px-3 py-1.5 bg-gray-50/80 border border-gray-200 rounded-lg text-sm text-gray-800 placeholder:text-gray-400 focus:bg-white focus:border-gray-300 focus:ring-2 focus:ring-gray-900/5 outline-none transition-all"}
                   />
                   <button
                     type="button"
                     onClick={() =>
-                      dispatch({
-                        type: "REMOVE_EXPERIENCE_BULLET",
-                        id: exp.id,
-                        bulletIndex,
-                      })
+                      dispatch({ type: "REMOVE_EXPERIENCE_BULLET", id: exp.id, bulletIndex })
                     }
-                    className="mt-1 p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+                    className="p-1 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0"
                     title="Remove bullet"
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
@@ -241,23 +198,11 @@ export default function ExperienceForm() {
             </div>
             <button
               type="button"
-              onClick={() =>
-                dispatch({ type: "ADD_EXPERIENCE_BULLET", id: exp.id })
-              }
-              className="mt-2 inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded transition-colors"
+              onClick={() => dispatch({ type: "ADD_EXPERIENCE_BULLET", id: exp.id })}
+              className="mt-1.5 inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium text-gray-400 hover:text-gray-600 transition-colors"
             >
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               Add Bullet
             </button>
@@ -268,20 +213,10 @@ export default function ExperienceForm() {
       <button
         type="button"
         onClick={() => dispatch({ type: "ADD_EXPERIENCE" })}
-        className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 border border-dashed border-gray-300 hover:border-gray-400 rounded-lg transition-colors"
       >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 4v16m8-8H4"
-          />
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
         </svg>
         Add Experience
       </button>

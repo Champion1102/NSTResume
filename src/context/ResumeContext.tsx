@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, ReactNode } from "react";
+import React, { createContext, useContext, useReducer, useEffect, useRef, ReactNode } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   ResumeData,
@@ -13,6 +13,8 @@ import {
   SkillCategory,
 } from "@/types/resume";
 import { defaultResume } from "@/data/defaultResume";
+
+const STORAGE_KEY = "nstresume-draft";
 
 interface ResumeState {
   resumeData: ResumeData;
@@ -51,7 +53,14 @@ type Action =
   | { type: "ADD_ACTIVITY" }
   | { type: "UPDATE_ACTIVITY"; index: number; value: string }
   | { type: "REMOVE_ACTIVITY"; index: number }
-  | { type: "LOAD_DATA"; payload: ResumeData };
+  | { type: "LOAD_DATA"; payload: ResumeData; templateId?: TemplateId; campusId?: CampusId }
+  | { type: "CLEAR_DRAFT" };
+
+const defaultState: ResumeState = {
+  resumeData: defaultResume,
+  templateId: "college",
+  campusId: "nst-ru",
+};
 
 function resumeReducer(state: ResumeState, action: Action): ResumeState {
   const { resumeData } = state;
@@ -308,7 +317,16 @@ function resumeReducer(state: ResumeState, action: Action): ResumeState {
     }
 
     case "LOAD_DATA":
-      return { ...state, resumeData: action.payload };
+      return {
+        ...state,
+        resumeData: action.payload,
+        ...(action.templateId && { templateId: action.templateId }),
+        ...(action.campusId && { campusId: action.campusId }),
+      };
+
+    case "CLEAR_DRAFT":
+      try { localStorage.removeItem(STORAGE_KEY); } catch {}
+      return { ...defaultState };
 
     default:
       return state;
@@ -325,11 +343,40 @@ interface ResumeContextValue {
 const ResumeContext = createContext<ResumeContextValue | null>(null);
 
 export function ResumeProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(resumeReducer, {
-    resumeData: defaultResume,
-    templateId: "college",
-    campusId: "nst-ru",
-  });
+  const [state, dispatch] = useReducer(resumeReducer, defaultState);
+  const hasLoaded = useRef(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.resumeData) {
+          dispatch({
+            type: "LOAD_DATA",
+            payload: parsed.resumeData,
+            templateId: parsed.templateId,
+            campusId: parsed.campusId,
+          });
+        }
+      }
+    } catch {}
+    hasLoaded.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoaded.current) return;
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          resumeData: state.resumeData,
+          templateId: state.templateId,
+          campusId: state.campusId,
+        })
+      );
+    } catch {}
+  }, [state.resumeData, state.templateId, state.campusId]);
 
   return (
     <ResumeContext.Provider

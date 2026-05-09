@@ -2,41 +2,32 @@
 
 import { useResume } from "@/context/ResumeContext";
 
+const inputClass = "w-full px-3 py-2 bg-gray-50/80 border border-gray-200 rounded-lg text-sm text-gray-800 placeholder:text-gray-400 focus:bg-white focus:border-gray-300 focus:ring-2 focus:ring-gray-900/5 outline-none transition-all";
+const labelClass = "block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5";
+
 export default function EducationForm() {
   const { resumeData, dispatch } = useResume();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {resumeData.education.map((edu) => (
         <div
           key={edu.id}
-          className="relative border border-gray-200 rounded-lg p-4 space-y-3"
+          className="relative border border-gray-100 rounded-xl p-4 space-y-3 bg-gray-50/30"
         >
           <button
             type="button"
             onClick={() => dispatch({ type: "REMOVE_EDUCATION", id: edu.id })}
-            className="absolute top-2 right-2 p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+            className="absolute top-3 right-3 p-1 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
             title="Remove education"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Degree
-            </label>
+            <label className={labelClass}>Degree</label>
             <input
               type="text"
               value={edu.degree}
@@ -49,15 +40,13 @@ export default function EducationForm() {
                 })
               }
               placeholder="B.Tech in Computer Science"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className={inputClass}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Institution
-              </label>
+              <label className={labelClass}>Institution</label>
               <input
                 type="text"
                 value={edu.institution}
@@ -70,13 +59,11 @@ export default function EducationForm() {
                   })
                 }
                 placeholder="University Name"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Year
-              </label>
+              <label className={labelClass}>Year</label>
               <input
                 type="text"
                 value={edu.year}
@@ -89,15 +76,13 @@ export default function EducationForm() {
                   })
                 }
                 placeholder="2020 - 2024"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className={inputClass}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Grade / GPA
-            </label>
+            <label className={labelClass}>Grade / GPA</label>
             <input
               type="text"
               value={edu.grade}
@@ -109,8 +94,8 @@ export default function EducationForm() {
                   value: e.target.value,
                 })
               }
-              placeholder="3.8 / 4.0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              placeholder="8.84 / 10.0"
+              className={inputClass}
             />
           </div>
         </div>
@@ -119,20 +104,10 @@ export default function EducationForm() {
       <button
         type="button"
         onClick={() => dispatch({ type: "ADD_EDUCATION" })}
-        className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 border border-dashed border-gray-300 hover:border-gray-400 rounded-lg transition-colors"
       >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 4v16m8-8H4"
-          />
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
         </svg>
         Add Education
       </button>
